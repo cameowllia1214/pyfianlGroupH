@@ -51,10 +51,7 @@ st.markdown("""
     margin-bottom: 1rem;
     box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
-.cafe-card::before {
-    content: ''; position: absolute; top: 0; left: 0;
-    width: 3px; height: 100%; background: linear-gradient(180deg, #8b5e3c, #3d2510);
-}
+            
 .cafe-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:#f5ede0 !important; margin-bottom:0.3rem; }
 .cafe-rating { font-size:0.8rem; color:#b09070 !important; letter-spacing:0.1em; }
 .cafe-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.8rem; }
