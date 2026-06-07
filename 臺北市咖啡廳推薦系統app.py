@@ -13,8 +13,8 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
 
-.stApp { background-color: #412e1f; font-family: 'Noto Serif TC', serif; }
-.stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #f5ede0 !important; }
+.stApp { background-color: #e8dfca; font-family: 'Noto Serif TC', serif; }
+.stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #7e5a3d !important; }
 .stSelectbox > div > div, .stMultiSelect > div > div, .stTextInput > div > div > input {
     background-color: #1f1008 !important; border: 1px solid #3d2510 !important;
     color: #f5ede0 !important; border-radius: 3px !important;
@@ -60,58 +60,66 @@ st.markdown("""
         0 10px 30px rgba(0,0,0,0.35),
         inset 0 1px 0 rgba(255,255,255,0.06);
 
-    transition: all 0.3s ease !important;
+    transition: all 0.35s ease !important;
 }
 
-/* 流動光感層 */
+/* ===== Liquid Glass 光流層 ===== */
 .cafe-card::before {
     content: "";
     position: absolute;
     inset: 0;
 
-    background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(255, 220, 180, 0.08) 30%,
-        rgba(255, 240, 210, 0.12) 50%,
-        transparent 70%
+    background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 220, 180, 0.18),
+        transparent 60%
     );
 
-    transform: translateX(-120%);
-    animation: liquidMove 6s infinite ease-in-out;
-
+    opacity: 0.6;
     pointer-events: none;
+
+    transition: opacity 0.3s ease;
 }
 
-/* 柔光點綴層 */
+/* ===== 咖啡香霧層 ===== */
 .cafe-card::after {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: -20px;
 
     background: radial-gradient(
-        circle at 20% 10%,
-        rgba(255,255,255,0.08),
-        transparent 40%
+        circle at 50% 50%,
+        rgba(200, 140, 90, 0.18),
+        rgba(120, 70, 40, 0.08),
+        transparent 70%
     );
 
+    opacity: 0;
+    filter: blur(18px);
+    transform: scale(0.85);
+
+    transition: all 0.6s ease;
     pointer-events: none;
 }
 
-/* hover 浮起效果 */
+/* hover：整體提升 */
 .cafe-card:hover {
     transform: translateY(-6px) scale(1.01);
     box-shadow:
         0 20px 50px rgba(0,0,0,0.45),
-        0 0 30px rgba(200, 150, 90, 0.12),
+        0 0 40px rgba(180, 120, 70, 0.15),
         inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
-/* 流動動畫 */
-@keyframes liquidMove {
-    0% { transform: translateX(-120%); }
-    50% { transform: translateX(120%); }
-    100% { transform: translateX(120%); }
+/* hover：香霧擴散 */
+.cafe-card:hover::after {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* hover：光感加強 */
+.cafe-card:hover::before {
+    opacity: 0.9;
 }
             
 .cafe-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:#f5ede0 !important; margin-bottom:0.3rem; }
