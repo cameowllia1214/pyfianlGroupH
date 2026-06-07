@@ -2,19 +2,18 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LinearRegression
 
 st.set_page_config(
-    page_title="啡你不可 — 台北咖啡廳推薦",
+    page_title="啡你不可 — 臺北市咖啡廳推薦系統",
     layout="centered"
 )
-df = pd.read_csv('/workspaces/pyfianlGroupH/cafe_detail_with_scores_最終版.csv')
 
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
 
-.stApp { background-color: #1a0f0a; font-family: 'Noto Serif TC', serif; }
+.stApp { background-color: #412e1f; font-family: 'Noto Serif TC', serif; }
 .stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #f5ede0 !important; }
 .stSelectbox > div > div, .stMultiSelect > div > div, .stTextInput > div > div > input {
     background-color: #1f1008 !important; border: 1px solid #3d2510 !important;
@@ -52,6 +51,7 @@ hr { border-color: #2d1a0e !important; margin: 1.5rem 0 !important; }
 .tag-neutral { background:#1a1508; color:#9a8060 !important; border:1px solid #3d3010; padding:0.2rem 0.7rem; border-radius:2px; font-size:0.75rem; }
 .cafe-info { margin-top:0.8rem; font-size:0.8rem; color:#9a7a5a !important; line-height:1.8; }
 .cafe-hours { margin-top:0.6rem; font-size:0.78rem; color:#7a6040 !important; line-height:1.6; }
+.cafe-comment { margin-top:0.8rem; font-size:0.82rem; color:#c8a87a !important; line-height:1.8; font-style:italic; border-top:1px solid #2d1a0e; padding-top:0.6rem; }
 .cafe-link { display:inline-block; margin-top:0.6rem; font-size:0.75rem; color:#a07050 !important; letter-spacing:0.1em; text-decoration:none; border-bottom:1px solid #3d2510; }
 .result-header { font-size:0.8rem; color:#9a7a5a !important; letter-spacing:0.2em; text-align:center; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid #2d1a0e; }
 .section-label { font-size:0.8rem; color:#9a7a5a !important; letter-spacing:0.15em; margin-bottom:0.5rem; }
@@ -59,12 +59,9 @@ hr { border-color: #2d1a0e !important; margin: 1.5rem 0 !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# ==================
-# 讀取資料
-# ==================
 @st.cache_data
 def load_data():
-    df = pd.read_csv('/workspaces/pyfianlGroupH/cafe_detail_all.csv')
+    df = pd.read_csv('/workspaces/pyfianlGroupH/cafe_detail_with_scores_最終版.csv')
     def extract_district(address):
         if pd.isna(address):
             return None
@@ -79,7 +76,7 @@ def load_data():
 df = load_data()
 
 district_map = {
-    '不限': '不限', '松山區': 'Songshan District', '大安區': "Da'an District",
+    '松山區': 'Songshan District', '大安區': "Da'an District",
     '中正區': 'Zhongzheng District', '中山區': 'Zhongshan District',
     '萬華區': 'Wanhua District', '信義區': 'Xinyi District',
     '大同區': 'Datong District', '文山區': 'Wenshan District',
@@ -104,10 +101,64 @@ all_day_cols = [
     ("週四","Thur_open","Thur_close"), ("週五","Fri_open","Fri_close"),
     ("週六","Sat_open","Sat_close"),
 ]
+features = ['rating', 'score_outlet', 'score_wifi', 'score_time_limit', 'station_distance']
 
-# ==================
+def generate_review(row):
+    review = f"【{row['name']}】綜合評分為 {row['rating']} 分。"
+    review += "提供插座。" if row.get("outlet") == "yes" else "未提供插座或資訊不明。"
+    review += "提供 WiFi。" if row.get("wifi") == "yes" else "無提供 WiFi。"
+    if pd.isna(row.get("time_limit")) or row.get("time_limit") == "NaN":
+        review += "無用餐限時。"
+    else:
+        review += "有用餐限時。"
+    try:
+        distance = round(float(row["station_distance"]))
+        review += f"距離最近的車站 {row['nearest_station']} 約 {distance} 公尺。"
+    except:
+        pass
+    return review
+
+def render_card(row, show_comment=False):
+    outlet_tag    = '<span class="tag-yes">有插座</span>'    if row.get('outlet') == 'yes'    else '<span class="tag-no">無插座</span>'
+    wifi_tag      = '<span class="tag-yes">有 WiFi</span>'   if row.get('wifi') == 'yes'      else '<span class="tag-no">無 WiFi</span>'
+    timelimit_tag = '<span class="tag-no">有時間限制</span>'  if row.get('time_limit') == 'yes' else '<span class="tag-yes">無時間限制</span>'
+    price         = price_labels.get(row.get('price_level'), '')
+    price_tag     = f'<span class="tag-neutral">{price}</span>' if price else ''
+    rating        = row.get('rating', '')
+    rating_count  = int(row.get('rating_number', 0)) if not pd.isna(row.get('rating_number', 0)) else 0
+    try:
+        sdist = f"{float(row.get('station_distance','')):.0f} 公尺"
+    except:
+        sdist = ''
+    try:
+        bdist = f"{float(row.get('bus_distance','')):.0f} 公尺"
+    except:
+        bdist = ''
+    hours_lines = []
+    for day_zh, oc, cc in all_day_cols:
+        o = row.get(oc)
+        c = row.get(cc)
+        if not pd.isna(o) and not pd.isna(c):
+            hours_lines.append(f"{day_zh}　{str(o)[:5]} – {str(c)[:5]}")
+        else:
+            hours_lines.append(f"{day_zh}　公休")
+    hours_html = "<br>".join(hours_lines)
+    comment_html = f'<div class="cafe-comment">{generate_review(row)}</div>' if show_comment else ''
+    url = row.get('url', '')
+    link_html = f'<a href="{url}" target="_blank" class="cafe-link">→ Google Maps</a>' if url else ''
+    st.markdown(f"""
+    <div class="cafe-card">
+        <div class="cafe-name">{row['name']}</div>
+        <div class="cafe-rating">★ {rating} &nbsp;·&nbsp; {rating_count} 則評論</div>
+        <div class="cafe-tags">{outlet_tag}{wifi_tag}{timelimit_tag}{price_tag}</div>
+        <div class="cafe-info">🚇 {row.get('nearest_station','')} &nbsp;{sdist}<br>🚌 {row.get('nearest_bus','')} &nbsp;{bdist}</div>
+        <div class="cafe-hours">🕐 營業時間<br>{hours_html}</div>
+        {comment_html}
+        {link_html}
+    </div>
+    """, unsafe_allow_html=True)
+
 # 標題
-# ==================
 st.markdown("""
 <div style="text-align:center; padding: 2.5rem 0 1.5rem 0;">
     <svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.5; margin-bottom:1rem;">
@@ -126,11 +177,9 @@ st.markdown("""
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# ==================
-# 第一階段：篩選條件
-# ==================
-st.markdown('<p class="section-label">行 政 區</p>', unsafe_allow_html=True)
-selected_zh = st.selectbox("", options=list(district_map.keys()), label_visibility="collapsed")
+# 篩選條件
+st.markdown('<p class="section-label">行 政 區（可複選，不選代表不限）</p>', unsafe_allow_html=True)
+selected_zh = st.multiselect("", options=list(district_map.keys()), default=[], label_visibility="collapsed", placeholder="不選代表不限")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown('<p class="section-label">需 求 條 件</p>', unsafe_allow_html=True)
@@ -144,8 +193,7 @@ with col3:
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown('<p class="section-label">價 格 區 間</p>', unsafe_allow_html=True)
-price_options = st.multiselect("", options=list(price_labels.keys()),
-    format_func=lambda x: price_labels[x], default=[], label_visibility="collapsed")
+price_options = st.multiselect("", options=list(price_labels.keys()), format_func=lambda x: price_labels[x], default=[], label_visibility="collapsed")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown('<p class="section-label">營 業 時 間</p>', unsafe_allow_html=True)
@@ -158,60 +206,14 @@ with col_t1:
 with col_t2:
     end_time = st.selectbox("離開時間", options=time_options)
 
-search = st.button("搜 尋 咖 啡 廳")
+search = st.button("推 薦  咖 啡 廳")
 
-# ==================
-# 篩選 + 排序邏輯
-# ==================
-def render_card(row, open_col, close_col):
-    outlet_tag    = '<span class="tag-yes">有插座</span>'    if row.get('outlet') == 'yes'    else '<span class="tag-no">無插座</span>'
-    wifi_tag      = '<span class="tag-yes">有 WiFi</span>'   if row.get('wifi') == 'yes'      else '<span class="tag-no">無 WiFi</span>'
-    timelimit_tag = '<span class="tag-no">有時間限制</span>'  if row.get('time_limit') == 'yes' else '<span class="tag-yes">無時間限制</span>'
-    price         = price_labels.get(row.get('price_level'), '')
-    price_tag     = f'<span class="tag-neutral">{price}</span>' if price else ''
-    rating        = row.get('rating', '')
-    rating_count  = int(row.get('rating_number', 0)) if not pd.isna(row.get('rating_number', 0)) else 0
-    station = row.get('nearest_station', '')
-    bus     = row.get('nearest_bus', '')
-    try:
-        sdist = f"{float(row.get('station_distance','')):.0f} 公尺"
-    except:
-        sdist = ''
-    try:
-        bdist = f"{float(row.get('bus_distance','')):.0f} 公尺"
-    except:
-        bdist = ''
-
-    hours_lines = []
-    for day_zh, oc, cc in all_day_cols:
-        o = row.get(oc)
-        c = row.get(cc)
-        if not pd.isna(o) and not pd.isna(c):
-            hours_lines.append(f"{day_zh}　{str(o)[:5]} – {str(c)[:5]}")
-        else:
-            hours_lines.append(f"{day_zh}　公休")
-    hours_html = "<br>".join(hours_lines)
-
-    url       = row.get('url', '')
-    link_html = f'<a href="{url}" target="_blank" class="cafe-link">→ Google Maps</a>' if url else ''
-
-    st.markdown(f"""
-    <div class="cafe-card">
-        <div class="cafe-name">{row['name']}</div>
-        <div class="cafe-rating">★ {rating} &nbsp;·&nbsp; {rating_count} 則評論</div>
-        <div class="cafe-tags">{outlet_tag}{wifi_tag}{timelimit_tag}{price_tag}</div>
-        <div class="cafe-info">🚇 {station} &nbsp;{sdist}<br>🚌 {bus} &nbsp;{bdist}</div>
-        <div class="cafe-hours">🕐 營業時間<br>{hours_html}</div>
-        {link_html}
-    </div>
-    """, unsafe_allow_html=True)
-
-
+# 第一階段
 if search:
     result = df.copy()
-
-    if selected_zh != '不限':
-        result = result[result['district'] == district_map[selected_zh]]
+    if selected_zh:
+        selected_en = [district_map[z] for z in selected_zh]
+        result = result[result['district'].isin(selected_en)]
     if want_outlet:
         result = result[result['outlet'] == 'yes']
     if want_wifi:
@@ -230,50 +232,55 @@ if search:
             c = row.get(close_col)
             if pd.isna(o) or pd.isna(c):
                 return False
-            shop_open  = str(o)[:5]
-            shop_close = str(c)[:5]
-            if start_time != "不限" and shop_open > start_time:
+            try:
+                shop_open  = datetime.strptime(str(o)[:5], "%H:%M")
+                shop_close = datetime.strptime(str(c)[:5], "%H:%M")
+            except:
                 return False
-            if end_time != "不限" and shop_close < end_time:
-                return False
+
+            if start_time != "不限":
+                t_start = datetime.strptime(start_time, "%H:%M")
+                if shop_open > t_start:
+                    return False
+                if shop_close <= t_start:
+                    return False
+
+            if end_time != "不限":
+                t_end = datetime.strptime(end_time, "%H:%M")
+                if shop_close < t_end:
+                    return False
+
             return True
         result = result[result.apply(is_open_during, axis=1)]
+    if len(result) == 0:
+        st.session_state['result'] = result
+        st.session_state['result_sorted'] = result
+        st.session_state['phase'] = 'like'
+    else:
+        result['score_plus_rating'] = result['rating'] + result['total_score']
+        result_sorted = result.sort_values(by='score_plus_rating', ascending=False).head(5).reset_index(drop=True)
+        st.session_state['result'] = result
+        st.session_state['result_sorted'] = result_sorted
+        st.session_state['phase'] = 'like'
 
-    result = result.reset_index(drop=True)
-
-    # 排出前5名
-    result_sorted = result.sort_values(by='total_score', ascending=False).head(5).reset_index(drop=True)
-
-    # 存進 session_state 供第二階段使用
-    st.session_state['result']        = result
-    st.session_state['result_sorted'] = result_sorted
-    st.session_state['open_col']      = open_col
-    st.session_state['close_col']     = close_col
-    st.session_state['phase']         = 'like'
-
-# ==================
-# 第二階段：顯示前5名 + 讓使用者排喜好
-# ==================
+# 第二階段
 if st.session_state.get('phase') == 'like':
     result_sorted = st.session_state['result_sorted']
-    open_col      = st.session_state['open_col']
-    close_col     = st.session_state['close_col']
 
     st.markdown("<hr>", unsafe_allow_html=True)
-    st.markdown(f'<div class="result-header">為您推薦前 5 間最符合條件的咖啡廳</div>', unsafe_allow_html=True)
+    st.markdown('<div class="result-header">為您推薦前 5 間最符合條件的咖啡廳</div>', unsafe_allow_html=True)
 
     if len(result_sorted) == 0:
         st.markdown('<p style="text-align:center; color:#7a5c42;">沒有完全符合的咖啡廳，試試放寬條件。</p>', unsafe_allow_html=True)
     else:
         for _, row in result_sorted.iterrows():
-            render_card(row, open_col, close_col)
+            render_card(row, show_comment=True)
 
         st.markdown("<hr>", unsafe_allow_html=True)
         st.markdown('<p class="section-label">告 訴 我 們 你 的 喜 好</p>', unsafe_allow_html=True)
         st.markdown('<p style="font-size:0.8rem; color:#7a5c42;">從上方 5 間中，選出你最喜歡的 1～3 間（可不選）</p>', unsafe_allow_html=True)
 
-        cafe_names = ["（不選）"] + result_sorted['name'].tolist()
-
+        cafe_names = ["無"] + result_sorted['name'].tolist()
         col_l1, col_l2, col_l3 = st.columns(3)
         with col_l1:
             like1 = st.selectbox("最喜歡", options=cafe_names)
@@ -285,12 +292,11 @@ if st.session_state.get('phase') == 'like':
         recommend = st.button("根 據 喜 好 再 推 薦 5 間")
 
         if recommend:
-            result        = st.session_state['result']
+            result = st.session_state['result'].copy()
             result_sorted = st.session_state['result_sorted'].copy()
-
             likes = [like1, like2, like3]
-            result_sorted['new_score'] = np.nan
 
+            result_sorted['new_score'] = np.nan
             for i in range(len(result_sorted)):
                 name = result_sorted['name'].iloc[i]
                 if name in likes:
@@ -299,20 +305,30 @@ if st.session_state.get('phase') == 'like':
                 else:
                     result_sorted.loc[result_sorted.index[i], 'new_score'] = 7
 
-            # 訓練 Random Forest
-            features = ['rating', 'score_outlet', 'score_wifi', 'score_time_limit', 'station_distance']
             X_train = result_sorted[features]
             y_train = result_sorted['new_score']
-            model = RandomForestClassifier(random_state=30)
+            model = LinearRegression()
             model.fit(X_train, y_train)
 
-            # 從剩下的店預測
             remaining = result[~result['name'].isin(result_sorted['name'])].copy()
-            X_test = remaining[features]
-            remaining['new_score'] = model.predict(X_test)
-            new_result = remaining.sort_values(by='new_score', ascending=False).head(5).reset_index(drop=True)
 
-            st.markdown("<hr>", unsafe_allow_html=True)
-            st.markdown('<div class="result-header">根據您的喜好，為您推薦另外 5 間</div>', unsafe_allow_html=True)
-            for _, row in new_result.iterrows():
-                render_card(row, open_col, close_col)
+            if len(remaining) == 0:
+                st.markdown('<p style="text-align:center; color:#7a5c42;">目前篩選結果只有 5 間，沒有更多咖啡廳可以推薦，試試放寬條件！</p>', unsafe_allow_html=True)
+            else:
+                remaining['new_score'] = model.predict(remaining[features])
+                new_result = remaining.sort_values(by='new_score', ascending=False).head(5).reset_index(drop=True)
+
+                st.markdown("<hr>", unsafe_allow_html=True)
+                st.markdown('<div class="result-header">根據您的喜好，為您推薦另外 5 間</div>', unsafe_allow_html=True)
+
+                for _, row in new_result.iterrows():
+                    render_card(row, show_comment=True)
+
+                highly_recommended = new_result[new_result['new_score'] > new_result['new_score'].mean()]['name'].tolist()
+                if highly_recommended:
+                    cafes_str = "、".join(highly_recommended)
+                    st.markdown(f"""
+                    <div style="text-align:center; padding:1.5rem; color:#c8a87a; font-size:0.85rem; letter-spacing:0.05em; border-top:1px solid #2d1a0e; margin-top:1rem;">
+                        以上是根據您的喜好推薦的咖啡廳，其中的{cafes_str}，可能比之前推薦給您的咖啡廳更適合您！
+                    </div>
+                    """, unsafe_allow_html=True)
