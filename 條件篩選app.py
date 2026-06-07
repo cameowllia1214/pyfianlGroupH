@@ -243,29 +243,29 @@ if search:
 
     if start_time != "不限" or end_time != "不限":
         def is_open_during(row):
-            o = row.get(open_col)
-            c = row.get(close_col)
-            if pd.isna(o) or pd.isna(c):
-                return False
-            try:
-                shop_open  = datetime.strptime(str(o)[:5], "%H:%M")
-                shop_close = datetime.strptime(str(c)[:5], "%H:%M")
-            except:
-                return False
+    o = row.get(open_col)
+    c = row.get(close_col)
+    if pd.isna(o) or pd.isna(c):
+        return False
+    try:
+        shop_open  = datetime.strptime(str(o)[:5], "%H:%M").time()
+        shop_close = datetime.strptime(str(c)[:5], "%H:%M").time()
+    except:
+        return False
 
-            if start_time != "不限":
-                t_start = datetime.strptime(start_time, "%H:%M")
-                if shop_open > t_start:
-                    return False
-                if shop_close <= t_start:
-                    return False
+    if start_time != "不限":
+        t_start = datetime.strptime(start_time, "%H:%M").time()
+        if shop_open > t_start:
+            return False
+        if shop_close <= t_start:
+            return False
 
-            if end_time != "不限":
-                t_end = datetime.strptime(end_time, "%H:%M")
-                if shop_close < t_end:
-                    return False
+    if end_time != "不限":
+        t_end = datetime.strptime(end_time, "%H:%M").time()
+        if shop_close < t_end:
+            return False
 
-            return True
+    return True
         result = result[result.apply(is_open_during, axis=1)]
     if len(result) == 0:
         st.session_state['result'] = result
