@@ -43,24 +43,75 @@ st.markdown("""
     background: linear-gradient(135deg, #a07050, #4d3520) !important;
 }
 .cafe-card {
-    background: rgba(31, 16, 8, 0.25) !important;
-    backdrop-filter: blur(14px) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
+    position: relative;
+    overflow: hidden;
 
-    border: 1px solid rgba(200, 160, 110, 0.2) !important;
-    border-radius: 16px !important;
+    background: rgba(31, 16, 8, 0.18) !important;
+    backdrop-filter: blur(18px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+
+    border: 1px solid rgba(255, 220, 180, 0.18) !important;
+    border-radius: 18px !important;
 
     padding: 1.4rem 1.6rem !important;
     margin-bottom: 1rem !important;
 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.06);
 
-    transition: all 0.25s ease !important;
+    transition: all 0.3s ease !important;
 }
 
+/* 流動光感層 */
+.cafe-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 220, 180, 0.08) 30%,
+        rgba(255, 240, 210, 0.12) 50%,
+        transparent 70%
+    );
+
+    transform: translateX(-120%);
+    animation: liquidMove 6s infinite ease-in-out;
+
+    pointer-events: none;
+}
+
+/* 柔光點綴層 */
+.cafe-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at 20% 10%,
+        rgba(255,255,255,0.08),
+        transparent 40%
+    );
+
+    pointer-events: none;
+}
+
+/* hover 浮起效果 */
 .cafe-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.5) !important;
+    transform: translateY(-6px) scale(1.01);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.45),
+        0 0 30px rgba(200, 150, 90, 0.12),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* 流動動畫 */
+@keyframes liquidMove {
+    0% { transform: translateX(-120%); }
+    50% { transform: translateX(120%); }
+    100% { transform: translateX(120%); }
 }
             
 .cafe-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:#f5ede0 !important; margin-bottom:0.3rem; }
