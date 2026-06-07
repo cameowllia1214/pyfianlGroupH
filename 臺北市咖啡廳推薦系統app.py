@@ -70,7 +70,7 @@ st.markdown("""
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv("cafe_detail_with_scores_最終版.csv")
+    df = pd.read_csv("cafe_detail_with_scores_final.csv")
     def extract_district(address):
         if pd.isna(address):
             return None
