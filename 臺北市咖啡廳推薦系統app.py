@@ -43,13 +43,24 @@ st.markdown("""
     background: linear-gradient(135deg, #a07050, #4d3520) !important;
 }
 .cafe-card {
-    background: rgba(31, 16, 8, 0.85);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(180, 140, 100, 0.2);
-    border-radius: 12px;
-    padding: 1.4rem 1.6rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    background: rgba(31, 16, 8, 0.25) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+
+    border: 1px solid rgba(200, 160, 110, 0.2) !important;
+    border-radius: 16px !important;
+
+    padding: 1.4rem 1.6rem !important;
+    margin-bottom: 1rem !important;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+
+    transition: all 0.25s ease !important;
+}
+
+.cafe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5) !important;
 }
             
 .cafe-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:#f5ede0 !important; margin-bottom:0.3rem; }
