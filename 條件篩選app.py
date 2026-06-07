@@ -24,20 +24,25 @@ st.markdown("""
 .stMultiSelect > div > div:focus-within, .stSelectbox > div > div:focus-within,
 .stTextInput > div > div > input:focus { border-color: #e8d5a0 !important; box-shadow: 0 0 0 1px #e8d5a0 !important; }
 .stButton > button {
-    background-color: transparent !important; border: 1px solid #8b5e3c !important;
-    color: #f5ede0 !important; font-family: 'Noto Serif TC', serif !important;
-    letter-spacing: 0.2em !important; padding: 0.7rem 2rem !important;
-    min-width: 200px !important; width: auto !important;
-    display: block !important; margin: 1rem auto !important;
-    transition: all 0.3s ease !important; border-radius: 2px !important;
+    background: linear-gradient(135deg, #8b5e3c, #3d2510) !important;
+    border: none !important;
+    color: #f5ede0 !important;
+    font-family: 'Noto Serif TC', serif !important;
+    letter-spacing: 0.15em !important;
+    padding: 0.9rem 2rem !important;
+    min-width: 200px !important;
+    width: auto !important;
+    display: block !important;
+    margin: 1rem auto !important;
+    transition: all 0.25s ease !important;
+    border-radius: 10px !important;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35) !important;
 }
-.stButton > button:hover { background-color: #3d2510 !important; border-color: #c4916a !important; }
-hr { border-color: #2d1a0e !important; margin: 1.5rem 0 !important; }
-.cafe-card {
-    background: linear-gradient(135deg, #1f1008 0%, #170d05 100%);
-    border: 1px solid #2d1a0e; border-radius: 4px;
-    padding: 1.4rem 1.6rem; margin-bottom: 1rem;
-    position: relative; overflow: hidden;
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.45) !important;
+    background: linear-gradient(135deg, #a07050, #4d3520) !important;
 }
 .cafe-card::before {
     content: ''; position: absolute; top: 0; left: 0;
@@ -214,8 +219,10 @@ with col_t1:
 with col_t2:
     end_time = st.selectbox("離開時間", options=time_options)
 
-search = st.button("推 薦  咖 啡 廳")
+col1, col2, col3 = st.columns([1, 2, 1])
 
+with col2:
+    search = st.button("推薦咖啡廳", use_container_width=True)
 # 第一階段
 if search:
     result = df.copy()
@@ -297,8 +304,13 @@ if st.session_state.get('phase') == 'like':
         with col_l3:
             like3 = st.selectbox("第三喜歡", options=cafe_names)
 
-        recommend = st.button("根 據 喜 好 再 推 薦 5 間")
+col1, col2, col3 = st.columns([1, 2, 1])
 
+with col2:
+    recommend = st.button(
+        " 根據喜好再推薦 5 間",
+        use_container_width=True
+    )
         if recommend:
             result = st.session_state['result'].copy()
             result_sorted = st.session_state['result_sorted'].copy()
