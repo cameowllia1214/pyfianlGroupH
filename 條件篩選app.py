@@ -85,7 +85,7 @@ def load_data():
 df = load_data()
 
 district_map = {
-    '松山區': 'Songshan District', '大安區': "Da'an District",
+    '松山區': 'Songshan District', '大安區': "Da\u2019an District",
     '中正區': 'Zhongzheng District', '中山區': 'Zhongshan District',
     '萬華區': 'Wanhua District', '信義區': 'Xinyi District',
     '大同區': 'Datong District', '文山區': 'Wenshan District',
