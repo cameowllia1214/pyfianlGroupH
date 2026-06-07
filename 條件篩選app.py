@@ -308,47 +308,52 @@ col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
     recommend = st.button(
-        " 根據喜好再推薦 5 間",
+        "根據喜好再推薦 5 間",
         use_container_width=True
     )
-        if recommend:
-            result = st.session_state['result'].copy()
-            result_sorted = st.session_state['result_sorted'].copy()
-            likes = [like1, like2, like3]
 
-            result_sorted['new_score'] = np.nan
-            for i in range(len(result_sorted)):
-                name = result_sorted['name'].iloc[i]
-                if name in likes:
-                    idx = likes.index(name)
-                    result_sorted.loc[result_sorted.index[i], 'new_score'] = 10 - idx
-                else:
-                    result_sorted.loc[result_sorted.index[i], 'new_score'] = 7
+# ✅ 注意：這裡一定要退回最左邊（跟 with col2 同層）
+if recommend:
+    result = st.session_state['result'].copy()
+    result_sorted = st.session_state['result_sorted'].copy()
+    likes = [like1, like2, like3]
 
-            X_train = result_sorted[features]
-            y_train = result_sorted['new_score']
-            model = LinearRegression()
-            model.fit(X_train, y_train)
+    result_sorted['new_score'] = np.nan
+    for i in range(len(result_sorted)):
+        name = result_sorted['name'].iloc[i]
+        if name in likes:
+            idx = likes.index(name)
+            result_sorted.loc[result_sorted.index[i], 'new_score'] = 10 - idx
+        else:
+            result_sorted.loc[result_sorted.index[i], 'new_score'] = 7
 
-            remaining = result[~result['name'].isin(result_sorted['name'])].copy()
+    X_train = result_sorted[features]
+    y_train = result_sorted['new_score']
+    model = LinearRegression()
+    model.fit(X_train, y_train)
 
-            if len(remaining) == 0:
-                st.markdown('<p style="text-align:center; color:#7a5c42;">目前篩選結果只有 5 間，沒有更多咖啡廳可以推薦，試試放寬條件！</p>', unsafe_allow_html=True)
-            else:
-                remaining['new_score'] = model.predict(remaining[features])
-                new_result = remaining.sort_values(by='new_score', ascending=False).head(5).reset_index(drop=True)
+    remaining = result[~result['name'].isin(result_sorted['name'])].copy()
 
-                st.markdown("<hr>", unsafe_allow_html=True)
-                st.markdown('<div class="result-header">根據您的喜好，為您推薦另外 5 間</div>', unsafe_allow_html=True)
+    if len(remaining) == 0:
+        st.markdown(
+            '<p style="text-align:center; color:#7a5c42;">目前篩選結果只有 5 間，沒有更多咖啡廳可以推薦，試試放寬條件！</p>',
+            unsafe_allow_html=True
+        )
+    else:
+        remaining['new_score'] = model.predict(remaining[features])
+        new_result = remaining.sort_values(by='new_score', ascending=False).head(5).reset_index(drop=True)
 
-                for _, row in new_result.iterrows():
-                    render_card(row, show_comment=True)
+        st.markdown("<hr>", unsafe_allow_html=True)
+        st.markdown('<div class="result-header">根據您的喜好，為您推薦另外 5 間</div>', unsafe_allow_html=True)
 
-                highly_recommended = new_result[new_result['new_score'] > new_result['new_score'].mean()]['name'].tolist()
-                if highly_recommended:
-                    cafes_str = "、".join(highly_recommended)
-                    st.markdown(f"""
-                    <div style="text-align:center; padding:1.5rem; color:#c8a87a; font-size:0.85rem; letter-spacing:0.05em; border-top:1px solid #2d1a0e; margin-top:1rem;">
-                        以上是根據您的喜好推薦的咖啡廳，其中的{cafes_str}，可能比之前推薦給您的咖啡廳更適合您！
-                    </div>
-                    """, unsafe_allow_html=True)
+        for _, row in new_result.iterrows():
+            render_card(row, show_comment=True)
+
+        highly_recommended = new_result[new_result['new_score'] > new_result['new_score'].mean()]['name'].tolist()
+        if highly_recommended:
+            cafes_str = "、".join(highly_recommended)
+            st.markdown(f"""
+            <div style="text-align:center; padding:1.5rem; color:#c8a87a; font-size:0.85rem; letter-spacing:0.05em; border-top:1px solid #2d1a0e; margin-top:1rem;">
+                以上是根據您的喜好推薦的咖啡廳，其中的{cafes_str}，可能比之前推薦給您的咖啡廳更適合您！
+            </div>
+            """, unsafe_allow_html=True)
