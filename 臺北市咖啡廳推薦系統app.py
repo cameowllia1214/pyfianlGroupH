@@ -46,7 +46,7 @@ st.markdown("""
     position: relative;
     overflow: hidden;
 
-    /* 🤍 白色玻璃核心 */
+    /*  白色玻璃核心 */
     background: rgba(255, 255, 255, 0.65) !important;
     backdrop-filter: blur(18px) saturate(160%) !important;
     -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
@@ -80,28 +80,7 @@ st.markdown("""
     opacity: 0.5;
     pointer-events: none;
     transition: opacity 0.3s ease;
-}
-
-/* 🌫 白色香霧（變成乾淨光暈） */
-.cafe-card::after {
-    content: "";
-    position: absolute;
-    inset: -20px;
-
-    background: radial-gradient(
-        circle at 50% 50%,
-        rgba(255, 255, 255, 0.6),
-        rgba(240, 240, 240, 0.2),
-        transparent 70%
-    );
-
-    opacity: 0;
-    filter: blur(20px);
-    transform: scale(0.85);
-
-    transition: all 0.5s ease;
-    pointer-events: none;
-}
+}  
 
 /* ✨ hover 浮起 */
 .cafe-card:hover {
@@ -123,6 +102,9 @@ st.markdown("""
 .cafe-card:hover::before {
     opacity: 0.9;
 }
+ .tag-yes { background: #c8a87a; color: #1a0f0a !important; border: none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
+.tag-no  { background: #8b6a50; color: #f5ede0 !important; border: none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
+.tag-neutral { background: #a07850; color: #f5ede0 !important; border: none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
             
 .cafe-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:#f5ede0 !important; margin-bottom:0.3rem; }
 .cafe-rating { font-size:0.8rem; color:#b09070 !important; letter-spacing:0.1em; }
@@ -134,7 +116,17 @@ st.markdown("""
 .cafe-hours { margin-top:0.6rem; font-size:0.78rem; color:#7a6040 !important; line-height:1.6; }
 .cafe-comment { margin-top:0.8rem; font-size:0.82rem; color:#c8a87a !important; line-height:1.8; font-style:italic; border-top:1px solid #2d1a0e; padding-top:0.6rem; }
 .cafe-link { display:inline-block; margin-top:0.6rem; font-size:0.75rem; color:#a07050 !important; letter-spacing:0.1em; text-decoration:none; border-bottom:1px solid #3d2510; }
-.result-header { font-size:0.8rem; color:#9a7a5a !important; letter-spacing:0.2em; text-align:center; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid #2d1a0e; }
+.result-header {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: #f5ede0 !important;
+    letter-spacing: 0.15em;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0;
+    border-bottom: none;
+}
 .section-label { font-size:0.8rem; color:#9a7a5a !important; letter-spacing:0.15em; margin-bottom:0.5rem; }
 #MainMenu, footer, header { visibility: hidden; }
 </style>
@@ -226,7 +218,7 @@ def render_card(row, show_comment=False):
     hours_html = "<br>".join(hours_lines)
     comment_html = f'<div class="cafe-comment">{generate_review(row)}</div>' if show_comment else ''
     url = row.get('url', '')
-    link_html = f'<a href="{url}" target="_blank" class="cafe-link">→ Google Maps</a>' if url else ''
+    link_html = f'<a href="{url}" target="_blank" style="display:inline-block; margin-top:0.8rem; padding:0.4rem 1.2rem; background:#8b5e3c; color:#f5ede0; border-radius:20px; font-size:0.78rem; text-decoration:none; letter-spacing:0.1em;">→ Google Maps</a>' if url else ''
     st.markdown(f"""
     <div class="cafe-card">
         <div class="cafe-name">{row['name']}</div>
