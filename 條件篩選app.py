@@ -59,18 +59,28 @@ hr { border-color: #2d1a0e !important; margin: 1.5rem 0 !important; }
 </style>
 """, unsafe_allow_html=True)
 
+import os
+
 @st.cache_data
 def load_data():
-    df = pd.read_csv('/workspaces/pyfianlGroupH/cafe_detail_with_scores_最終版.csv')
+    st.write("目前資料夾：", os.getcwd())
+    st.write("目前檔案：", os.listdir("."))
+
+    df = pd.read_csv("cafe_detail_with_scores_最終版.csv")
+
     def extract_district(address):
         if pd.isna(address):
             return None
+
         for part in address.split(','):
             part = part.strip()
             if 'District' in part:
                 return part
+
         return None
+
     df['district'] = df['address'].apply(extract_district)
+
     return df
 
 df = load_data()
