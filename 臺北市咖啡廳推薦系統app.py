@@ -185,7 +185,7 @@ st.markdown("""
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-st.markdown('<p class="section-label">行 政 區（可複選，不選代表不限）</p>', unsafe_allow_html=True)
+st.markdown('<p class="section-label">行 政 區（可複選）</p>', unsafe_allow_html=True)
 selected_zh = st.multiselect("", options=list(district_map.keys()), default=[], label_visibility="collapsed", placeholder="不選代表不限")
 
 st.markdown("<hr>", unsafe_allow_html=True)
