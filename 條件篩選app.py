@@ -63,8 +63,6 @@ import os
 
 @st.cache_data
 def load_data():
-    st.write("目前資料夾：", os.getcwd())
-    st.write("目前檔案：", os.listdir("."))
 
     df = pd.read_csv("cafe_detail_with_scores_最終版.csv")
 
