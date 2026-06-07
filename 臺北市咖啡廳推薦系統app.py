@@ -20,7 +20,7 @@ st.markdown("""
     color: #f5ede0 !important; border-radius: 3px !important;
 }
 .stCheckbox label { color: #f5ede0 !important; }
-.stMultiSelect span[data-baseweb="tag"] { background-color: #3d2a10 !important; color: #f5ede0 !important; }
+.stMultiSelect span[data-baseweb="tag"] { background-color: #ffffff !important; color: #f5ede0 !important; }
 .stMultiSelect > div > div:focus-within, .stSelectbox > div > div:focus-within,
 .stTextInput > div > div > input:focus { border-color: #e8d5a0 !important; box-shadow: 0 0 0 1px #e8d5a0 !important; }
 .stButton > button {
@@ -81,26 +81,6 @@ st.markdown("""
     transition: opacity 0.3s ease;
 }
 
-/* ===== 咖啡香霧層 ===== */
-.cafe-card::after {
-    content: "";
-    position: absolute;
-    inset: -20px;
-
-    background: radial-gradient(
-        circle at 50% 50%,
-        rgba(200, 140, 90, 0.18),
-        rgba(120, 70, 40, 0.08),
-        transparent 70%
-    );
-
-    opacity: 0;
-    filter: blur(18px);
-    transform: scale(0.85);
-
-    transition: all 0.6s ease;
-    pointer-events: none;
-}
 
 /* hover：整體提升 */
 .cafe-card:hover {
