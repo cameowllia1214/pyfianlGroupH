@@ -13,7 +13,7 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
 
-.stApp { background-color: #e8dfca; font-family: 'Noto Serif TC', serif; }
+.stApp { background-color: #f1ede1; font-family: 'Noto Serif TC', serif; }
 .stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #7e5a3d !important; }
 .stSelectbox > div > div, .stMultiSelect > div > div, .stTextInput > div > div > input {
     background-color: #1f1008 !important; border: 1px solid #3d2510 !important;
@@ -46,24 +46,26 @@ st.markdown("""
     position: relative;
     overflow: hidden;
 
-    background: rgba(31, 16, 8, 0.18) !important;
-    backdrop-filter: blur(18px) saturate(140%) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+    /* 🤍 白色玻璃核心 */
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: blur(18px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
 
-    border: 1px solid rgba(255, 220, 180, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
     border-radius: 18px !important;
 
     padding: 1.4rem 1.6rem !important;
     margin-bottom: 1rem !important;
 
+    /* 柔和陰影（白色系） */
     box-shadow:
-        0 10px 30px rgba(0,0,0,0.35),
-        inset 0 1px 0 rgba(255,255,255,0.06);
+        0 12px 30px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.7);
 
-    transition: all 0.35s ease !important;
+    transition: all 0.3s ease !important;
 }
 
-/* ===== Liquid Glass 光流層 ===== */
+/* 🌤 柔光中心 */
 .cafe-card::before {
     content: "";
     position: absolute;
@@ -71,33 +73,53 @@ st.markdown("""
 
     background: radial-gradient(
         circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(255, 220, 180, 0.18),
+        rgba(255, 255, 255, 0.8),
         transparent 60%
     );
 
-    opacity: 0.6;
+    opacity: 0.5;
     pointer-events: none;
-
     transition: opacity 0.3s ease;
 }
 
+/* 🌫 白色香霧（變成乾淨光暈） */
+.cafe-card::after {
+    content: "";
+    position: absolute;
+    inset: -20px;
 
-/* hover：整體提升 */
-.cafe-card:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow:
-        0 20px 50px rgba(0,0,0,0.45),
-        0 0 40px rgba(180, 120, 70, 0.15),
-        inset 0 1px 0 rgba(255,255,255,0.08);
+    background: radial-gradient(
+        circle at 50% 50%,
+        rgba(255, 255, 255, 0.6),
+        rgba(240, 240, 240, 0.2),
+        transparent 70%
+    );
+
+    opacity: 0;
+    filter: blur(20px);
+    transform: scale(0.85);
+
+    transition: all 0.5s ease;
+    pointer-events: none;
 }
 
-/* hover：香霧擴散 */
+/* ✨ hover 浮起 */
+.cafe-card:hover {
+    transform: translateY(-6px) scale(1.01);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.12),
+        0 0 30px rgba(255,255,255,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+/* 🌫 hover 光霧 */
 .cafe-card:hover::after {
     opacity: 1;
     transform: scale(1.2);
 }
 
-/* hover：光感加強 */
+/* 🌟 hover 光感加強 */
 .cafe-card:hover::before {
     opacity: 0.9;
 }
