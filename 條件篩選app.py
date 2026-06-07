@@ -38,11 +38,15 @@ st.markdown("""
     border-radius: 10px !important;
     box-shadow: 0 6px 18px rgba(0,0,0,0.35) !important;
 }
-
 .stButton > button:hover {
-    transform: translateY(-2px);
     box-shadow: 0 10px 24px rgba(0,0,0,0.45) !important;
     background: linear-gradient(135deg, #a07050, #4d3520) !important;
+}
+.cafe-card {
+    background: linear-gradient(135deg, #1f1008 0%, #170d05 100%);
+    border: 1px solid #2d1a0e; border-radius: 4px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1rem;
+    position: relative; overflow: hidden;
 }
 .cafe-card::before {
     content: ''; position: absolute; top: 0; left: 0;
@@ -64,26 +68,18 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-import os
-
 @st.cache_data
 def load_data():
-
     df = pd.read_csv("cafe_detail_with_scores_最終版.csv")
-
     def extract_district(address):
         if pd.isna(address):
             return None
-
         for part in address.split(','):
             part = part.strip()
             if 'District' in part:
                 return part
-
         return None
-
     df['district'] = df['address'].apply(extract_district)
-
     return df
 
 df = load_data()
@@ -171,7 +167,6 @@ def render_card(row, show_comment=False):
     </div>
     """, unsafe_allow_html=True)
 
-# 標題
 st.markdown("""
 <div style="text-align:center; padding: 2.5rem 0 1.5rem 0;">
     <svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.5; margin-bottom:1rem;">
@@ -190,7 +185,6 @@ st.markdown("""
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# 篩選條件
 st.markdown('<p class="section-label">行 政 區（可複選，不選代表不限）</p>', unsafe_allow_html=True)
 selected_zh = st.multiselect("", options=list(district_map.keys()), default=[], label_visibility="collapsed", placeholder="不選代表不限")
 
@@ -220,10 +214,9 @@ with col_t2:
     end_time = st.selectbox("離開時間", options=time_options)
 
 col1, col2, col3 = st.columns([1, 2, 1])
-
 with col2:
     search = st.button("推薦咖啡廳", use_container_width=True)
-# 第一階段
+
 if search:
     result = df.copy()
     if selected_zh:
@@ -243,30 +236,28 @@ if search:
 
     if start_time != "不限" or end_time != "不限":
         def is_open_during(row):
-    o = row.get(open_col)
-    c = row.get(close_col)
-    if pd.isna(o) or pd.isna(c):
-        return False
-    try:
-        shop_open  = datetime.strptime(str(o)[:5], "%H:%M").time()
-        shop_close = datetime.strptime(str(c)[:5], "%H:%M").time()
-    except:
-        return False
-
-    if start_time != "不限":
-        t_start = datetime.strptime(start_time, "%H:%M").time()
-        if shop_open > t_start:
-            return False
-        if shop_close <= t_start:
-            return False
-
-    if end_time != "不限":
-        t_end = datetime.strptime(end_time, "%H:%M").time()
-        if shop_close < t_end:
-            return False
-
-    return True
+            o = row.get(open_col)
+            c = row.get(close_col)
+            if pd.isna(o) or pd.isna(c):
+                return False
+            try:
+                shop_open  = datetime.strptime(str(o)[:5], "%H:%M").time()
+                shop_close = datetime.strptime(str(c)[:5], "%H:%M").time()
+            except:
+                return False
+            if start_time != "不限":
+                t_start = datetime.strptime(start_time, "%H:%M").time()
+                if shop_open > t_start:
+                    return False
+                if shop_close <= t_start:
+                    return False
+            if end_time != "不限":
+                t_end = datetime.strptime(end_time, "%H:%M").time()
+                if shop_close < t_end:
+                    return False
+            return True
         result = result[result.apply(is_open_during, axis=1)]
+
     if len(result) == 0:
         st.session_state['result'] = result
         st.session_state['result_sorted'] = result
@@ -278,7 +269,6 @@ if search:
         st.session_state['result_sorted'] = result_sorted
         st.session_state['phase'] = 'like'
 
-# 第二階段
 if st.session_state.get('phase') == 'like':
     result_sorted = st.session_state['result_sorted']
 
@@ -304,56 +294,48 @@ if st.session_state.get('phase') == 'like':
         with col_l3:
             like3 = st.selectbox("第三喜歡", options=cafe_names)
 
-col1, col2, col3 = st.columns([1, 2, 1])
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            recommend = st.button("根據喜好再推薦 5 間", use_container_width=True)
 
-with col2:
-    recommend = st.button(
-        "根據喜好再推薦 5 間",
-        use_container_width=True
-    )
+        if recommend:
+            result = st.session_state['result'].copy()
+            result_sorted = st.session_state['result_sorted'].copy()
+            likes = [like1, like2, like3]
 
-# ✅ 注意：這裡一定要退回最左邊（跟 with col2 同層）
-if recommend:
-    result = st.session_state['result'].copy()
-    result_sorted = st.session_state['result_sorted'].copy()
-    likes = [like1, like2, like3]
+            result_sorted['new_score'] = np.nan
+            for i in range(len(result_sorted)):
+                name = result_sorted['name'].iloc[i]
+                if name in likes:
+                    idx = likes.index(name)
+                    result_sorted.loc[result_sorted.index[i], 'new_score'] = 10 - idx
+                else:
+                    result_sorted.loc[result_sorted.index[i], 'new_score'] = 7
 
-    result_sorted['new_score'] = np.nan
-    for i in range(len(result_sorted)):
-        name = result_sorted['name'].iloc[i]
-        if name in likes:
-            idx = likes.index(name)
-            result_sorted.loc[result_sorted.index[i], 'new_score'] = 10 - idx
-        else:
-            result_sorted.loc[result_sorted.index[i], 'new_score'] = 7
+            X_train = result_sorted[features]
+            y_train = result_sorted['new_score']
+            model = LinearRegression()
+            model.fit(X_train, y_train)
 
-    X_train = result_sorted[features]
-    y_train = result_sorted['new_score']
-    model = LinearRegression()
-    model.fit(X_train, y_train)
+            remaining = result[~result['name'].isin(result_sorted['name'])].copy()
 
-    remaining = result[~result['name'].isin(result_sorted['name'])].copy()
+            if len(remaining) == 0:
+                st.markdown('<p style="text-align:center; color:#7a5c42;">目前篩選結果只有 5 間，沒有更多咖啡廳可以推薦，試試放寬條件！</p>', unsafe_allow_html=True)
+            else:
+                remaining['new_score'] = model.predict(remaining[features])
+                new_result = remaining.sort_values(by='new_score', ascending=False).head(5).reset_index(drop=True)
 
-    if len(remaining) == 0:
-        st.markdown(
-            '<p style="text-align:center; color:#7a5c42;">目前篩選結果只有 5 間，沒有更多咖啡廳可以推薦，試試放寬條件！</p>',
-            unsafe_allow_html=True
-        )
-    else:
-        remaining['new_score'] = model.predict(remaining[features])
-        new_result = remaining.sort_values(by='new_score', ascending=False).head(5).reset_index(drop=True)
+                st.markdown("<hr>", unsafe_allow_html=True)
+                st.markdown('<div class="result-header">根據您的喜好，為您推薦另外 5 間</div>', unsafe_allow_html=True)
 
-        st.markdown("<hr>", unsafe_allow_html=True)
-        st.markdown('<div class="result-header">根據您的喜好，為您推薦另外 5 間</div>', unsafe_allow_html=True)
+                for _, row in new_result.iterrows():
+                    render_card(row, show_comment=True)
 
-        for _, row in new_result.iterrows():
-            render_card(row, show_comment=True)
-
-        highly_recommended = new_result[new_result['new_score'] > new_result['new_score'].mean()]['name'].tolist()
-        if highly_recommended:
-            cafes_str = "、".join(highly_recommended)
-            st.markdown(f"""
-            <div style="text-align:center; padding:1.5rem; color:#c8a87a; font-size:0.85rem; letter-spacing:0.05em; border-top:1px solid #2d1a0e; margin-top:1rem;">
-                以上是根據您的喜好推薦的咖啡廳，其中的{cafes_str}，可能比之前推薦給您的咖啡廳更適合您！
-            </div>
-            """, unsafe_allow_html=True)
+                highly_recommended = new_result[new_result['new_score'] > new_result['new_score'].mean()]['name'].tolist()
+                if highly_recommended:
+                    cafes_str = "、".join(highly_recommended)
+                    st.markdown(f"""
+                    <div style="text-align:center; padding:1.5rem; color:#c8a87a; font-size:0.85rem; letter-spacing:0.05em; border-top:1px solid #2d1a0e; margin-top:1rem;">
+                        以上是根據您的喜好推薦的咖啡廳，其中的{cafes_str}，可能比之前推薦給您的咖啡廳更適合您！
+                    </div>
+                    """, unsafe_allow_html=True)
