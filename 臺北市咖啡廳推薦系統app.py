@@ -43,10 +43,13 @@ st.markdown("""
     background: linear-gradient(135deg, #a07050, #4d3520) !important;
 }
 .cafe-card {
-    background: linear-gradient(135deg, #1f1008 0%, #170d05 100%);
-    border: 1px solid #2d1a0e; border-radius: 4px;
-    padding: 1.4rem 1.6rem; margin-bottom: 1rem;
-    position: relative; overflow: hidden;
+    background: rgba(31, 16, 8, 0.85);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(180, 140, 100, 0.2);
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
 .cafe-card::before {
     content: ''; position: absolute; top: 0; left: 0;
