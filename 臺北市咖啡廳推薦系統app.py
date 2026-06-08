@@ -14,8 +14,7 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
 
-.stApp { background-color: #f1ede1; font-family: 'Noto Serif TC', serif; }
-.stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #7e5a3d !important; }
+.stApp { background-color: #f1ede1; font-family: 'Noto Serif TC', serif; font-size: 1.25rem; }.stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #7e5a3d !important; }
 
 .stSelectbox > div > div, .stMultiSelect > div > div, .stTextInput > div > div > input {
     background-color: #ffffff !important; border: 1px solid #d4c4a8 !important;
