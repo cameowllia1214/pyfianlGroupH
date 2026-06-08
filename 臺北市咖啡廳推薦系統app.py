@@ -29,6 +29,7 @@ st.markdown("""
     background: linear-gradient(135deg, #8b5e3c, #3d2510) !important;
     border: none !important;
     color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
     font-family: 'Noto Serif TC', serif !important;
     letter-spacing: 0.15em !important;
     padding: 0.9rem 2rem !important;
