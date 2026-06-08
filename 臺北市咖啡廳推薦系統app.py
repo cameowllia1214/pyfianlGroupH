@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -230,7 +231,7 @@ st.markdown('<p class="section-label">價 格 區 間</p>', unsafe_allow_html=Tr
 price_options = st.multiselect("", options=list(price_labels.keys()), format_func=lambda x: price_labels[x], default=[], label_visibility="collapsed")
 
 st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown('<p class="section-label">營 業 時 間</p>', unsafe_allow_html=True)
+st.markdown('<p class="section-label"> 時 段 </p>', unsafe_allow_html=True)
 time_options = ["不限"] + [f"{h:02d}:00" for h in range(24)]
 
 col_d, col_t1, col_t2 = st.columns(3)
@@ -363,7 +364,16 @@ if st.session_state.get('phase') == 'like':
                 if highly_recommended:
                     cafes_str = "、".join(highly_recommended)
                     st.markdown(f"""
-                    <div style="text-align:center; padding:1.5rem; color:#8b6040; font-size:0.85rem; letter-spacing:0.05em; border-top:1px solid #d4c4a8; margin-top:1rem;">
-                        以上是根據您的喜好推薦的咖啡廳，其中的{cafes_str}，可能比之前推薦給您的咖啡廳更適合您！
-                    </div>
-                    """, unsafe_allow_html=True)
+<div style="text-align:center; padding:2rem 1rem; margin-top:1.5rem;">
+    <div style="font-family:'Cormorant Garamond',serif; font-size:0.85rem; color:#9a7a5a; letter-spacing:0.2em; margin-bottom:0.8rem;">
+        ✦ &nbsp; 您的專屬推薦 &nbsp; ✦
+    </div>
+    <div style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-style:italic; color:#3d2510; line-height:1.8; letter-spacing:0.05em;">
+        {cafes_str}
+    </div>
+    <div style="width:40px; height:1px; background:linear-gradient(90deg,transparent,#8b5e3c,transparent); margin:1rem auto;"></div>
+    <div style="font-size:0.8rem; color:#9a7a5a; letter-spacing:0.1em;">
+        根據您的喜好，這幾間可能比第一輪推薦更適合您
+    </div>
+</div>
+""", unsafe_allow_html=True)
