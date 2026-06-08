@@ -15,14 +15,16 @@ st.markdown("""
 
 .stApp { background-color: #f1ede1; font-family: 'Noto Serif TC', serif; }
 .stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #7e5a3d !important; }
+
 .stSelectbox > div > div, .stMultiSelect > div > div, .stTextInput > div > div > input {
     background-color: #1f1008 !important; border: 1px solid #3d2510 !important;
     color: #f5ede0 !important; border-radius: 3px !important;
 }
-.stCheckbox label { color: #f5ede0 !important; }
-.stMultiSelect span[data-baseweb="tag"] { background-color: #ffffff !important; color: #f5ede0 !important; }
+.stCheckbox label { color: #7e5a3d !important; }
+.stMultiSelect span[data-baseweb="tag"] { background-color: #8b5e3c !important; color: #f5ede0 !important; }
 .stMultiSelect > div > div:focus-within, .stSelectbox > div > div:focus-within,
 .stTextInput > div > div > input:focus { border-color: #e8d5a0 !important; box-shadow: 0 0 0 1px #e8d5a0 !important; }
+
 .stButton > button {
     background: linear-gradient(135deg, #8b5e3c, #3d2510) !important;
     border: none !important;
@@ -36,91 +38,49 @@ st.markdown("""
     margin: 1rem auto !important;
     transition: all 0.25s ease !important;
     border-radius: 10px !important;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.35) !important;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25) !important;
 }
 .stButton > button:hover {
-    box-shadow: 0 10px 24px rgba(0,0,0,0.45) !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35) !important;
     background: linear-gradient(135deg, #a07050, #4d3520) !important;
 }
+
+hr { border-color: #d4c4a8 !important; margin: 1.5rem 0 !important; }
+
 .cafe-card {
     position: relative;
     overflow: hidden;
-
-    /*  白色玻璃核心 */
-    background: rgba(255, 255, 255, 0.65) !important;
+    background: rgba(255, 255, 255, 0.75) !important;
     backdrop-filter: blur(18px) saturate(160%) !important;
     -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
-
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
     border-radius: 18px !important;
-
     padding: 1.4rem 1.6rem !important;
     margin-bottom: 1rem !important;
-
-    /* 柔和陰影（白色系） */
-    box-shadow:
-        0 12px 30px rgba(0,0,0,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.7);
-
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
     transition: all 0.3s ease !important;
 }
-
-/* 🌤 柔光中心 */
-.cafe-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-
-    background: radial-gradient(
-        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(255, 255, 255, 0.8),
-        transparent 60%
-    );
-
-    opacity: 0.5;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}  
-
-/* ✨ hover 浮起 */
 .cafe-card:hover {
-    transform: translateY(-6px) scale(1.01);
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,0.12),
-        0 0 30px rgba(255,255,255,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.9);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9);
 }
+.cafe-card::before { display: none; }
 
-/* 🌫 hover 光霧 */
-.cafe-card:hover::after {
-    opacity: 1;
-    transform: scale(1.2);
-}
-
-/* 🌟 hover 光感加強 */
-.cafe-card:hover::before {
-    opacity: 0.9;
-}
- .tag-yes { background: #c8a87a; color: #1a0f0a !important; border: none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
-.tag-no  { background: #8b6a50; color: #f5ede0 !important; border: none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
-.tag-neutral { background: #a07850; color: #f5ede0 !important; border: none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
-            
-.cafe-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:#f5ede0 !important; margin-bottom:0.3rem; }
-.cafe-rating { font-size:0.8rem; color:#b09070 !important; letter-spacing:0.1em; }
+.cafe-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:#3d2510 !important; margin-bottom:0.3rem; }
+.cafe-rating { font-size:0.8rem; color:#8b6040 !important; letter-spacing:0.1em; }
 .cafe-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.8rem; }
-.tag-yes { background:#1a3020; color:#6aad80 !important; border:1px solid #2d5040; padding:0.2rem 0.7rem; border-radius:2px; font-size:0.75rem; }
-.tag-no  { background:#1a1010; color:#9a5050 !important; border:1px solid #3d2020; padding:0.2rem 0.7rem; border-radius:2px; font-size:0.75rem; }
-.tag-neutral { background:#1a1508; color:#9a8060 !important; border:1px solid #3d3010; padding:0.2rem 0.7rem; border-radius:2px; font-size:0.75rem; }
-.cafe-info { margin-top:0.8rem; font-size:0.8rem; color:#9a7a5a !important; line-height:1.8; }
-.cafe-hours { margin-top:0.6rem; font-size:0.78rem; color:#7a6040 !important; line-height:1.6; }
-.cafe-comment { margin-top:0.8rem; font-size:0.82rem; color:#c8a87a !important; line-height:1.8; font-style:italic; border-top:1px solid #2d1a0e; padding-top:0.6rem; }
-.cafe-link { display:inline-block; margin-top:0.6rem; font-size:0.75rem; color:#a07050 !important; letter-spacing:0.1em; text-decoration:none; border-bottom:1px solid #3d2510; }
+.tag-yes { background:#5c3d1e; color:#e8c99a !important; border:none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
+.tag-no  { background:#2d1a0e; color:#9a7a5a !important; border:none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
+.tag-neutral { background:#3d2a10; color:#c4a070 !important; border:none; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.75rem; }
+.cafe-info { margin-top:0.8rem; font-size:0.8rem; color:#7a5a3a !important; line-height:1.8; }
+.cafe-hours { margin-top:0.6rem; font-size:0.78rem; color:#9a7a5a !important; line-height:1.6; }
+.cafe-comment { margin-top:0.8rem; font-size:0.82rem; color:#8b6040 !important; line-height:1.8; font-style:italic; border-top:1px solid #e0d0b8; padding-top:0.6rem; }
+
 .result-header {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-style: italic;
-    color: #f5ede0 !important;
+    color: #3d2510 !important;
     letter-spacing: 0.15em;
     text-align: center;
     margin-bottom: 1.5rem;
@@ -128,6 +88,15 @@ st.markdown("""
     border-bottom: none;
 }
 .section-label { font-size:0.8rem; color:#9a7a5a !important; letter-spacing:0.15em; margin-bottom:0.5rem; }
+
+.white-box {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    margin: 0.5rem 0 1rem 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
 #MainMenu, footer, header { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
@@ -149,7 +118,7 @@ def load_data():
 df = load_data()
 
 district_map = {
-    '松山區': 'Songshan District', '大安區': "Da\u2019an District",
+    '松山區': 'Songshan District', '大安區': '\u2019'.join(["Da", "an District"]),
     '中正區': 'Zhongzheng District', '中山區': 'Zhongshan District',
     '萬華區': 'Wanhua District', '信義區': 'Xinyi District',
     '大同區': 'Datong District', '文山區': 'Wenshan District',
@@ -218,7 +187,7 @@ def render_card(row, show_comment=False):
     hours_html = "<br>".join(hours_lines)
     comment_html = f'<div class="cafe-comment">{generate_review(row)}</div>' if show_comment else ''
     url = row.get('url', '')
-    link_html = f'<a href="{url}" target="_blank" style="display:inline-block; margin-top:0.8rem; padding:0.4rem 1.2rem; background:#8b5e3c; color:#f5ede0; border-radius:20px; font-size:0.78rem; text-decoration:none; letter-spacing:0.1em;">→ Google Maps</a>' if url else ''
+    link_html = f'<a href="{url}" target="_blank" style="display:inline-block; margin-top:0.8rem; padding:0.5rem 1.4rem; background:#8b5e3c; color:#f5ede0; border-radius:20px; font-size:0.78rem; text-decoration:none; letter-spacing:0.1em; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">→ Google Maps</a>' if url else ''
     st.markdown(f"""
     <div class="cafe-card">
         <div class="cafe-name">{row['name']}</div>
@@ -231,25 +200,18 @@ def render_card(row, show_comment=False):
     </div>
     """, unsafe_allow_html=True)
 
+# 標題
 st.markdown("""
 <div style="text-align:center; padding: 2.5rem 0 1.5rem 0;">
-    <svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.5; margin-bottom:1rem;">
-        <ellipse cx="60" cy="30" rx="55" ry="20" stroke="#8b5e3c" stroke-width="0.5" fill="none"/>
-        <ellipse cx="60" cy="30" rx="40" ry="14" stroke="#6b4a2c" stroke-width="0.5" fill="none"/>
-        <ellipse cx="60" cy="30" rx="25" ry="9"  stroke="#4d3520" stroke-width="0.5" fill="none"/>
-        <ellipse cx="60" cy="30" rx="12" ry="4"  stroke="#3d2510" stroke-width="0.5" fill="none"/>
-        <path d="M60 10 Q75 20 60 30 Q45 20 60 10Z" stroke="#8b5e3c" stroke-width="0.5" fill="none"/>
-        <line x1="60" y1="10" x2="60" y2="30" stroke="#5c3a20" stroke-width="0.3"/>
-    </svg>
-    <div style="font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:300; font-style:italic; color:#f5ede0; letter-spacing:0.05em;">啡你不可</div>
+    <div style="font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:300; font-style:italic; color:#3d2510; letter-spacing:0.05em;">啡你不可</div>
     <div style="width:60px; height:1px; background:linear-gradient(90deg,transparent,#8b5e3c,transparent); margin:1rem auto;"></div>
-    <div style="font-size:0.8rem; color:#7a5c42; letter-spacing:0.3em;">臺 北 市 咖 啡 廳 推 薦 系 統</div>
+    <div style="font-size:0.8rem; color:#9a7a5a; letter-spacing:0.3em;">臺 北 市 咖 啡 廳 推 薦 系 統</div>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-st.markdown('<p class="section-label">行 政 區（可複選）</p>', unsafe_allow_html=True)
+st.markdown('<p class="section-label">行 政 區（可複選，不選代表不限）</p>', unsafe_allow_html=True)
 selected_zh = st.multiselect("", options=list(district_map.keys()), default=[], label_visibility="collapsed", placeholder="不選代表不限")
 
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -269,6 +231,8 @@ price_options = st.multiselect("", options=list(price_labels.keys()), format_fun
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown('<p class="section-label">營 業 時 間</p>', unsafe_allow_html=True)
 time_options = ["不限"] + [f"{h:02d}:00" for h in range(24)]
+
+st.markdown('<div class="white-box">', unsafe_allow_html=True)
 col_d, col_t1, col_t2 = st.columns(3)
 with col_d:
     selected_day = st.selectbox("星期", options=list(day_zh_map.keys()))
@@ -276,6 +240,7 @@ with col_t1:
     start_time = st.selectbox("抵達時間", options=time_options)
 with col_t2:
     end_time = st.selectbox("離開時間", options=time_options)
+st.markdown('</div>', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
@@ -340,15 +305,16 @@ if st.session_state.get('phase') == 'like':
     st.markdown('<div class="result-header">為您推薦前 5 間最符合條件的咖啡廳</div>', unsafe_allow_html=True)
 
     if len(result_sorted) == 0:
-        st.markdown('<p style="text-align:center; color:#7a5c42;">沒有完全符合的咖啡廳，試試放寬條件。</p>', unsafe_allow_html=True)
+        st.markdown('<p style="text-align:center; color:#9a7a5a;">沒有完全符合的咖啡廳，試試放寬條件。</p>', unsafe_allow_html=True)
     else:
         for _, row in result_sorted.iterrows():
             render_card(row, show_comment=True)
 
         st.markdown("<hr>", unsafe_allow_html=True)
         st.markdown('<p class="section-label">告 訴 我 們 你 的 喜 好</p>', unsafe_allow_html=True)
-        st.markdown('<p style="font-size:0.8rem; color:#7a5c42;">從上方 5 間中，選出你最喜歡的 1～3 間（可不選）</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:0.8rem; color:#9a7a5a;">從上方 5 間中，選出你最喜歡的 1～3 間（可不選）</p>', unsafe_allow_html=True)
 
+        st.markdown('<div class="white-box">', unsafe_allow_html=True)
         cafe_names = ["無"] + result_sorted['name'].tolist()
         col_l1, col_l2, col_l3 = st.columns(3)
         with col_l1:
@@ -357,6 +323,7 @@ if st.session_state.get('phase') == 'like':
             like2 = st.selectbox("第二喜歡", options=cafe_names)
         with col_l3:
             like3 = st.selectbox("第三喜歡", options=cafe_names)
+        st.markdown('</div>', unsafe_allow_html=True)
 
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -384,7 +351,7 @@ if st.session_state.get('phase') == 'like':
             remaining = result[~result['name'].isin(result_sorted['name'])].copy()
 
             if len(remaining) == 0:
-                st.markdown('<p style="text-align:center; color:#7a5c42;">目前篩選結果只有 5 間，沒有更多咖啡廳可以推薦，試試放寬條件！</p>', unsafe_allow_html=True)
+                st.markdown('<p style="text-align:center; color:#9a7a5a;">目前篩選結果只有 5 間，沒有更多咖啡廳可以推薦，試試放寬條件！</p>', unsafe_allow_html=True)
             else:
                 remaining['new_score'] = model.predict(remaining[features])
                 new_result = remaining.sort_values(by='new_score', ascending=False).head(5).reset_index(drop=True)
@@ -399,7 +366,7 @@ if st.session_state.get('phase') == 'like':
                 if highly_recommended:
                     cafes_str = "、".join(highly_recommended)
                     st.markdown(f"""
-                    <div style="text-align:center; padding:1.5rem; color:#c8a87a; font-size:0.85rem; letter-spacing:0.05em; border-top:1px solid #2d1a0e; margin-top:1rem;">
+                    <div style="text-align:center; padding:1.5rem; color:#8b6040; font-size:0.85rem; letter-spacing:0.05em; border-top:1px solid #d4c4a8; margin-top:1rem;">
                         以上是根據您的喜好推薦的咖啡廳，其中的{cafes_str}，可能比之前推薦給您的咖啡廳更適合您！
                     </div>
                     """, unsafe_allow_html=True)
