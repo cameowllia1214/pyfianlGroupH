@@ -28,7 +28,7 @@ st.markdown("""
 .stButton > button {
     background: linear-gradient(135deg, #8b5e3c, #3d2510) !important;
     border: none !important;
-    color: #f5ede0 !important;
+    color: #ffffff !important;
     font-family: 'Noto Serif TC', serif !important;
     letter-spacing: 0.15em !important;
     padding: 0.9rem 2rem !important;
@@ -194,7 +194,7 @@ def render_card(row, show_comment=False):
         <div class="cafe-rating">★ {rating} &nbsp;·&nbsp; {rating_count} 則評論</div>
         <div class="cafe-tags">{outlet_tag}{wifi_tag}{timelimit_tag}{price_tag}</div>
         <div class="cafe-info">🚇 {row.get('nearest_station','')} &nbsp;{sdist}<br>🚌 {row.get('nearest_bus','')} &nbsp;{bdist}</div>
-        <div class="cafe-hours">🕐 營業時間<br>{hours_html}</div>
+        <div class="cafe-hours">🕐 時段 <br>{hours_html}</div>
         {comment_html}
         {link_html}
     </div>
@@ -211,8 +211,8 @@ st.markdown("""
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-st.markdown('<p class="section-label">行 政 區（可複選，不選代表不限）</p>', unsafe_allow_html=True)
-selected_zh = st.multiselect("", options=list(district_map.keys()), default=[], label_visibility="collapsed", placeholder="不選代表不限")
+st.markdown('<p class="section-label">行 政 區（可複選）</p>', unsafe_allow_html=True)
+selected_zh = st.multiselect("", options=list(district_map.keys()), default=[], label_visibility="collapsed", placeholder="選擇行政區")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown('<p class="section-label">需 求 條 件</p>', unsafe_allow_html=True)
@@ -309,7 +309,7 @@ if st.session_state.get('phase') == 'like':
             render_card(row, show_comment=True)
 
         st.markdown("<hr>", unsafe_allow_html=True)
-        st.markdown('<p class="section-label">告 訴 我 們 你 的 喜 好</p>', unsafe_allow_html=True)
+        st.markdown('<p class="section-label">讓我們更了解您的喜好 </p>', unsafe_allow_html=True)
         st.markdown('<p style="font-size:0.8rem; color:#9a7a5a;">從上方 5 間中，選出你最喜歡的 1～3 間（可不選）</p>', unsafe_allow_html=True)
 
         cafe_names = ["無"] + result_sorted['name'].tolist()
