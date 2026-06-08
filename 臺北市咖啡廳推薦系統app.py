@@ -12,7 +12,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-html, body { font-size: 18px !important; }           
+html, body { font-size: 16px !important; }           
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
 
 .stApp { background-color: #f1ede1; font-family: 'Noto Serif TC', serif; font-size: 2rem; }.stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #7e5a3d !important; }
@@ -224,7 +224,7 @@ with col1:
 with col2:
     want_wifi = st.checkbox("需要 WiFi")
 with col3:
-    no_time_limit = st.checkbox("不要時間限制")
+    no_time_limit = st.checkbox("無時間限制")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown('<p class="section-label">價 格 區 間  （可複選）</p>', unsafe_allow_html=True)
