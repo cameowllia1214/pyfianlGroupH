@@ -292,6 +292,7 @@ if search:
         st.session_state['result_sorted'] = result
         st.session_state['phase'] = 'like'
     else:
+        result = result.drop_duplicates(subset='name', keep='first')
         result['score_plus_rating'] = result['rating'] + result['total_score']
         result_sorted = result.sort_values(by='score_plus_rating', ascending=False).head(5).reset_index(drop=True)
         st.session_state['result'] = result
