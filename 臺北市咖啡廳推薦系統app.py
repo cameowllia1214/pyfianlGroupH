@@ -17,13 +17,13 @@ st.markdown("""
 .stApp, .stApp p, .stApp label, .stApp .stMarkdown, .stApp div { color: #7e5a3d !important; }
 
 .stSelectbox > div > div, .stMultiSelect > div > div, .stTextInput > div > div > input {
-    background-color: #1f1008 !important; border: 1px solid #3d2510 !important;
-    color: #f5ede0 !important; border-radius: 3px !important;
+    background-color: #ffffff !important; border: 1px solid #d4c4a8 !important;
+    color: #3d2510 !important; border-radius: 8px !important;
 }
 .stCheckbox label { color: #7e5a3d !important; }
 .stMultiSelect span[data-baseweb="tag"] { background-color: #8b5e3c !important; color: #f5ede0 !important; }
 .stMultiSelect > div > div:focus-within, .stSelectbox > div > div:focus-within,
-.stTextInput > div > div > input:focus { border-color: #e8d5a0 !important; box-shadow: 0 0 0 1px #e8d5a0 !important; }
+.stTextInput > div > div > input:focus { border-color: #c4a060 !important; box-shadow: 0 0 0 1px #c4a060 !important; }
 
 .stButton > button {
     background: linear-gradient(135deg, #8b5e3c, #3d2510) !important;
@@ -232,7 +232,6 @@ st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown('<p class="section-label">營 業 時 間</p>', unsafe_allow_html=True)
 time_options = ["不限"] + [f"{h:02d}:00" for h in range(24)]
 
-st.markdown('<div class="white-box">', unsafe_allow_html=True)
 col_d, col_t1, col_t2 = st.columns(3)
 with col_d:
     selected_day = st.selectbox("星期", options=list(day_zh_map.keys()))
@@ -240,7 +239,6 @@ with col_t1:
     start_time = st.selectbox("抵達時間", options=time_options)
 with col_t2:
     end_time = st.selectbox("離開時間", options=time_options)
-st.markdown('</div>', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
@@ -314,7 +312,6 @@ if st.session_state.get('phase') == 'like':
         st.markdown('<p class="section-label">告 訴 我 們 你 的 喜 好</p>', unsafe_allow_html=True)
         st.markdown('<p style="font-size:0.8rem; color:#9a7a5a;">從上方 5 間中，選出你最喜歡的 1～3 間（可不選）</p>', unsafe_allow_html=True)
 
-        st.markdown('<div class="white-box">', unsafe_allow_html=True)
         cafe_names = ["無"] + result_sorted['name'].tolist()
         col_l1, col_l2, col_l3 = st.columns(3)
         with col_l1:
@@ -323,7 +320,6 @@ if st.session_state.get('phase') == 'like':
             like2 = st.selectbox("第二喜歡", options=cafe_names)
         with col_l3:
             like3 = st.selectbox("第三喜歡", options=cafe_names)
-        st.markdown('</div>', unsafe_allow_html=True)
 
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
