@@ -227,7 +227,7 @@ with col3:
     no_time_limit = st.checkbox("不要時間限制")
 
 st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown('<p class="section-label">價 格 區 間  （可 複 選）</p>', unsafe_allow_html=True)
+st.markdown('<p class="section-label">價 格 區 間  （可複選）</p>', unsafe_allow_html=True)
 price_options = st.multiselect("", options=list(price_labels.keys()), format_func=lambda x: price_labels[x], default=[], label_visibility="collapsed")
 
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -319,7 +319,7 @@ if st.session_state.get('phase') == 'like':
 
         st.markdown("<hr>", unsafe_allow_html=True)
         st.markdown('<p class="section-label">讓我們更了解您的喜好... </p>', unsafe_allow_html=True)
-        st.markdown('<p style="font-size:0.8rem; color:#9a7a5a;">從上方 5 間中，選出你最喜歡的 1～3 間（可不選）</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:0.8rem; color:#9a7a5a;">請從上方 5 間中，選出你最喜歡的 1～3 間</p>', unsafe_allow_html=True)
 
         cafe_names = ["無"] + result_sorted['name'].tolist()
         col_l1, col_l2, col_l3 = st.columns(3)
