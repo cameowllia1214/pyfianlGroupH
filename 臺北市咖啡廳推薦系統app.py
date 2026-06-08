@@ -196,7 +196,7 @@ def render_card(row, show_comment=False):
         <div class="cafe-rating">★ {rating} &nbsp;·&nbsp; {rating_count} 則評論</div>
         <div class="cafe-tags">{outlet_tag}{wifi_tag}{timelimit_tag}{price_tag}</div>
         <div class="cafe-info">🚇 {row.get('nearest_station','')} &nbsp;{sdist}<br>🚌 {row.get('nearest_bus','')} &nbsp;{bdist}</div>
-        <div class="cafe-hours">🕐 時段 <br>{hours_html}</div>
+        <div class="cafe-hours">🕐 營業時間 <br>{hours_html}</div>
         {comment_html}
         {link_html}
     </div>
