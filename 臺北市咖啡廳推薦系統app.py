@@ -302,7 +302,14 @@ if st.session_state.get('phase') == 'like':
     result_sorted = st.session_state['result_sorted']
 
     st.markdown("<hr>", unsafe_allow_html=True)
-    st.markdown('<div class="result-header">為您推薦前 5 間最符合條件的咖啡廳</div>', unsafe_allow_html=True)
+    st.markdown("""
+<div style="text-align:center; padding:1.5rem 0 1rem 0;">
+    <div style="font-size:0.75rem; color:#9a7a5a; letter-spacing:0.3em; margin-bottom:0.6rem;">✦ &nbsp; RECOMMENDATION &nbsp; ✦</div>
+    <div style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-style:italic; color:#3d2510; letter-spacing:0.08em;">為您推薦前 5 間</div>
+    <div style="font-size:0.8rem; color:#9a7a5a; letter-spacing:0.15em; margin-top:0.3rem;">最符合您條件的咖啡廳</div>
+    <div style="width:50px; height:1px; background:linear-gradient(90deg,transparent,#8b5e3c,transparent); margin:0.8rem auto 0 auto;"></div>
+</div>
+""", unsafe_allow_html=True)
 
     if len(result_sorted) == 0:
         st.markdown('<p style="text-align:center; color:#9a7a5a;">沒有完全符合的咖啡廳，試試放寬條件。</p>', unsafe_allow_html=True)
@@ -355,7 +362,14 @@ if st.session_state.get('phase') == 'like':
                 new_result = remaining.sort_values(by='new_score', ascending=False).head(5).reset_index(drop=True)
 
                 st.markdown("<hr>", unsafe_allow_html=True)
-                st.markdown('<div class="result-header">根據您的喜好，為您推薦另外 5 間</div>', unsafe_allow_html=True)
+                st.markdown("""
+<div style="text-align:center; padding:1.5rem 0 1rem 0;">
+    <div style="font-size:0.75rem; color:#9a7a5a; letter-spacing:0.3em; margin-bottom:0.6rem;">✦ &nbsp; FOR YOU &nbsp; ✦</div>
+    <div style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-style:italic; color:#3d2510; letter-spacing:0.08em;">專屬於您的推薦</div>
+    <div style="font-size:0.8rem; color:#9a7a5a; letter-spacing:0.15em; margin-top:0.3rem;">根據您的喜好，為您挑選另外 5 間</div>
+    <div style="width:50px; height:1px; background:linear-gradient(90deg,transparent,#8b5e3c,transparent); margin:0.8rem auto 0 auto;"></div>
+</div>
+""", unsafe_allow_html=True)
 
                 for _, row in new_result.iterrows():
                     render_card(row, show_comment=True)
