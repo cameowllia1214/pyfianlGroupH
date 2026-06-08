@@ -247,6 +247,7 @@ with col2:
     search = st.button("推薦咖啡廳", use_container_width=True)
 
 if search:
+    st.session_state['phase'] = None  # 重置狀態
     result = df.copy()
     if selected_zh:
         selected_en = [district_map[z] for z in selected_zh]
